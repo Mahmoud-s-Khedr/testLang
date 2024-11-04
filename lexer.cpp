@@ -64,10 +64,20 @@ void tokenizer(string str, vector<pair<string, string>> &tokens){
             i++;
             continue;
         }
+        //check for headers
+        if(str[i]=='#'){
+            string token = "";
+            while(i<str.length()&&str[i]!='\n'){
+                token += str[i];
+                i++;
+            }
+            tokens.push_back({token, "preprocessor"});
+            continue;
+        }
         //check for identifiers and keywords
         if(isalpha(str[i])){
             string token = "";
-            while(isalpha(str[i])|| isdigit(str[i])|| str[i]=='_'){
+            while(i<str.length()&&(isalpha(str[i])|| isdigit(str[i])|| str[i]=='_')){
                 token += str[i];
                 i++;
             }
@@ -82,7 +92,7 @@ void tokenizer(string str, vector<pair<string, string>> &tokens){
         if(isdigit(str[i])){
             string token = "";
             string type = "integer";
-            while(isdigit(str[i]) || str[i] == '.'){
+            while(i<str.length()&&(isdigit(str[i]) || str[i] == '.')){
                 if (str[i] == '.')
                 {
                    type = "float";
@@ -148,7 +158,7 @@ void tokenizer(string str, vector<pair<string, string>> &tokens){
             return;
         }
         //check for operators brackets (){}[] + - * / % ^ = < > & | ; 
-        if (str[i] == '(' || str[i] == ')' || str[i] == '{' || str[i] == '}' || str[i] == '[' || str[i] == ']' ||
+        if (str[i] == '(' || str[i] == ')' || str[i] == '{' || str[i] == '}' || str[i] == '[' || str[i] == ']' || str[i] == ':' ||
             str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '%' || str[i] == '^' || str[i] == '.' ||
             str[i] == '=' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == '|' || str[i] == ';' || str[i] == ',')
         {
@@ -161,7 +171,7 @@ void tokenizer(string str, vector<pair<string, string>> &tokens){
             string token = "";
             token += str[i];
             i++;
-            while(str[i]!='"'){
+            while(i<str.length()&&str[i]!='"'){
                 token += str[i];
                 i++;
             }
@@ -175,7 +185,7 @@ void tokenizer(string str, vector<pair<string, string>> &tokens){
             string token = "";
             token += str[i];
             i++;
-            while(str[i]!='\''){
+            while(i<str.length()&&str[i]!='\''){
                 token += str[i];
                 i++;
             }
@@ -186,7 +196,7 @@ void tokenizer(string str, vector<pair<string, string>> &tokens){
         }
 
         if(str[i]){
-            cerr<<"ERROR : "<<str[i]<<" is not a valid character: "<<endl;
+            cerr<<"ERROR : "<<str[i]<<" is not a valid character: "<<i<<endl;
             exit(1);
         }
         i++;
